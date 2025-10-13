@@ -35,7 +35,7 @@ Running these examples is straightforward.
 
 ## 📁 Project Structure
 
-The project is structured with an isolated folder for each API:
+Each API has its own isolated folder. If you can't find a specific folder, file, or code snippet, it means that component has not been written or implemented yet.
 
 Public-Crypto-API-Reference/<br/>
 ├── README.md<br/>
@@ -45,6 +45,9 @@ Public-Crypto-API-Reference/<br/>
 ├── binance/                <br/>
 │   ├── index.html          <br/>
 │   └── binance.js          <br/>
+├── coinmarketcap/          <br/>
+│   ├── index.html          <br/>
+│   └── coinmarketcap.js    <br/>
 
 ---
 
