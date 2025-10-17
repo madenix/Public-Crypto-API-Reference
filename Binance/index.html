@@ -1,91 +1,86 @@
-
 <!DOCTYPE html>
-<html>
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,minimum-scale=1.0"/>
-    <script type="text/javascript" src="https://unpkg.com/lightweight-charts/dist/lightweight-charts.standalone.production.js"></script>
-  </head>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Binance Price Helper</title>
+</head>
+<body>
+  <h1>Crypto Prices:</h1>
+  <div id="price">Loading...</div>
+  <div id="candle">Loading...</div>
+  <script>
 
-  <body>
-    <div id="container" style="position: absolute; width: 1000px; height: 500px;"></div>
+    /* BINANCE PRICE DATA INTEGRATION */ 
+    //https://developers.binance.com/docs/binance-spot-api-docs/rest-api/market-data-endpoints#symbol-price-ticker
 
-<script>
-  function getCandlestickData()
-  {
-    var theUrl = "https://api.binance.com/api/v3/klines?symbol=BTCUSDT&interval=1h&limit=100";
-    var xmlHttp = new XMLHttpRequest();
-    xmlHttp.open( "GET", theUrl, false ); // false for synchronous request
-    xmlHttp.send( null );
-    var response = xmlHttp.responseText;
-    response = response.substring(1);
-    response = response.substring(0, response.length -1);
-    response = response.replaceAll('"', "");
-    var responseArray = response.split("[");
-
-    var result = [];
-    for(i=0; i<responseArray.length; i++)
-    {
-      var newResponse = responseArray[i].substring(0,responseArray[i].length-2);
-      //document.write(newResponse + "<br />");
-
-      if(i!=0)
-      {
-        newResponse = newResponse.split(",");
-        var openTime = newResponse[0];
-        openTime = openTime / 1000;
-        var openPrice = newResponse[1];
-        var highPrice = newResponse[2];
-        var lowPrice = newResponse[3];
-        var closePrice = newResponse[4];
-        var volume = newResponse[5];
-        //document.write("Time : " + openTime + ", Open Price : " + openPrice + ", High Price : " + highPrice + ", Low Price : " + lowPrice + ", Close Price : " + closePrice + ", Volume : " + volume + "<br />");
-        result.push({time: openTime, open: openPrice, high: highPrice, low: lowPrice, close: closePrice});
-      }
+    function getPriceBinance(base, quote, elementID){
+        var symbol = base + quote;
+        var priceEndPoint = "https://api.binance.com/api/v3/ticker/price?symbol="+symbol;
+        
+        fetch(priceEndPoint)
+        .then(response => response.json())
+        .then(data => {document.getElementById(elementID).innerHTML = base+"/"+quote + ": " + parseFloat(data.price).toFixed(2);})
+        .catch(error => {console.log(error);});
     }
-    return result;
-  }//get candlestick data
+
+    getPriceBinance("BTC", "USDT", "price");
+
+    /* BINANCE KLINE DATA INTEGRATION */
+    //https://developers.binance.com/docs/binance-spot-api-docs/rest-api/market-data-endpoints#klinecandlestick-data
+
+    //NAME	     |TYPE	  |MANDATORY	|DESCRIPTION
+    //symbol	   |STRING	|YES	
+    //interval	 |ENUM	  |YES	      |See klines
+    //startTime	 |LONG	  |NO	
+    //endTime	   |LONG	  |NO	
+    //timeZone	 |STRING	|NO	        |Default: 0 (UTC)
+    //limit	     |INT	    |NO	        |Default: 500; Maximum: 1000
+
+    //seconds	1s
+    //minutes	1m, 3m, 5m, 15m, 30m
+    //hours	1h, 2h, 4h, 6h, 8h, 12h
+    //days	1d, 3d
+    //weeks	1w
+    //months	1M
 
 
-  // Create the Lightweight Chart within the container element
-  const chart = LightweightCharts.createChart(document.getElementById('container'));
+    // parseCandleData transforms raw Binance candlestick (kline) data into a more readable JSON format.
+    // Each element in the rawData array is itself an array containing multiple values such as
+    // timestamp, open, high, low, close, volume, etc.
+    // This function maps each raw array to an object with meaningful property names and formats numeric values.
+    function parseCandleData(rawData) {
+      return rawData.map(candle => ({
+        // The opening time of the candlestick in milliseconds since epoch
+        openTime: candle[0],
 
-  chart.applyOptions({
-    layout: {
-      background: {
-        color: '#161a1e',
-      },
-    lineColor: '#2B2B43',
-    textColor: '#D9D9D9',
-    },
-    grid: {
-      vertLines: {
-        color: '#2B2B43',
-      },
-      horzLines: {
-        color: '#363C4E',
-      },
-    },
-  });
+        // The opening price of the candle, formatted to 2 decimal places
+        openPrice: parseFloat(candle[1]).toFixed(2),
 
-  // Generate sample data to use within a candlestick series
-  const candleStickData = getCandlestickData();
+        // The highest price reached during the candle
+        highPrice: parseFloat(candle[2]).toFixed(2),
 
-  // Create the Main Series (Candlesticks)
-  const candleSeries = chart.addSeries(LightweightCharts.CandlestickSeries);
-  // Set the data for the Main Series
-  candleSeries.setData(candleStickData);
+        // The lowest price reached during the candle
+        lowPrice: parseFloat(candle[3]).toFixed(2),
 
-  // Adding a window resize event handler to resize the chart when
-  // the window size changes.
-  // Note: for more advanced examples (when the chart doesn't fill the entire window)
-  // you may need to use ResizeObserver -> https://developer.mozilla.org/en-US/docs/Web/API/ResizeObserver
-  window.addEventListener("resize", () => {
-    chart.resize(window.innerWidth, window.innerHeight);
-  });
+        // The closing price of the candle
+        closePrice: parseFloat(candle[4]).toFixed(2),
 
-</script>
+        // The trading volume during the candle
+        volume: parseFloat(candle[5]).toFixed(2)
+      }));
+    }
 
-  </body>
+    function getCandleBinance(base, quote, elementID, interval, limit){
+      var symbol = base + quote;
+      var candleEndpoint = "https://api.binance.com/api/v3/klines?symbol=" + symbol + "&interval=" + interval + "&limit=" + limit;
+      
+      fetch(candleEndpoint)
+      .then(response => response.json())
+      .then(data=> {document.getElementById(elementID).innerHTML = parseCandleData(data)[2].openPrice;})
+      .catch(error=>{document.getElementById(elementID).innerHTML = "Error: " + error;})
+    }
+
+    getCandleBinance("BTC", "USDT", "candle", "1h", "10");
+  </script>
+</body>
 </html>
-
