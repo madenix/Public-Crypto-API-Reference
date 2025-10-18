@@ -12,18 +12,25 @@
 
     /* BINANCE PRICE DATA INTEGRATION */ 
     //https://developers.binance.com/docs/binance-spot-api-docs/rest-api/market-data-endpoints#symbol-price-ticker
-
-    function getPriceBinance(base, quote, elementID){
+    function getPriceBinanceAsync(base, quote){
         var symbol = base + quote;
         var priceEndPoint = "https://api.binance.com/api/v3/ticker/price?symbol="+symbol;
         
-        fetch(priceEndPoint)
+        return fetch(priceEndPoint)
         .then(response => response.json())
-        .then(data => {document.getElementById(elementID).innerHTML = base+"/"+quote + ": " + parseFloat(data.price).toFixed(2);})
-        .catch(error => {console.log(error);});
+        .then(data => {
+          const symbolPrice = parseFloat(data.price).toFixed(2); 
+          return symbolPrice;
+        })
+        .catch(error => {console.log(error);
+        });
     }
 
-    getPriceBinance("BTC", "USDT", "price");
+    async function showBinancePrice(){
+      const price = await getPriceBinanceAsync("BTC", "USDT");
+      document.getElementById("price").innerHTML = price;
+    }
+    showBinancePrice();
 
     /* BINANCE KLINE DATA INTEGRATION */
     //https://developers.binance.com/docs/binance-spot-api-docs/rest-api/market-data-endpoints#klinecandlestick-data
@@ -70,17 +77,22 @@
       }));
     }
 
-    function getCandleBinance(base, quote, elementID, interval, limit){
+    function getCandleBinanceAsyn(base, quote, interval, limit){
       var symbol = base + quote;
       var candleEndpoint = "https://api.binance.com/api/v3/klines?symbol=" + symbol + "&interval=" + interval + "&limit=" + limit;
       
-      fetch(candleEndpoint)
+      return fetch(candleEndpoint)
       .then(response => response.json())
-      .then(data=> {document.getElementById(elementID).innerHTML = parseCandleData(data)[2].openPrice;})
-      .catch(error=>{document.getElementById(elementID).innerHTML = "Error: " + error;})
+      .then(data=> {return parseCandleData(data);})
+      .catch(error=>{console.log("Error: " + error);});
     }
 
-    getCandleBinance("BTC", "USDT", "candle", "1h", "10");
+    async function showBinanceCandles(){
+      const candles = await getCandleBinanceAsyn("BTC","USDT","1h","5");
+      document.getElementById("candle").innerHTML = JSON.stringify(candles, null,2);
+    }
+    
+    showBinanceCandles();
   </script>
 </body>
 </html>
