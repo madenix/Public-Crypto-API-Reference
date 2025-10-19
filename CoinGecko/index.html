@@ -1,1 +1,55 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Coingecko Api Helper</title>
+    <script src="coingecko.js"></script>
+</head>
+<body>
+    <b>Coingecko only symbol price</b><br>
+    <div id="price">Loading Price...</div><br>
+    <br>
+        <b>Coingecko price and 24hr change</b><br>
+    <div id="symbolData">Loading symbol data...</div><br>
+    <br>
+        <b>Coingecko candle datas</b><br>
+    <div id="candles">Loading Price...</div><br>
+    <br>
 
+    <script>
+        async function showCGPrice(){
+            const price = await getPriceCG("bitcoin", "usd");
+            document.getElementById("price").innerText = "BTC/USD : $" + price.bitcoin.usd;
+        }
+        showCGPrice();
+
+        async function showSymbolDataCG(){
+            const symbolData = await getSymbolDataCG("bitcoin", "usd");
+            const price = symbolData.bitcoin.usd;
+            const change24hr = parseFloat(symbolData.bitcoin.usd_24h_change).toFixed(2);
+            document.getElementById("symbolData").innerHTML = "BTC/USD : $" + price + " <b>" + change24hr+"% (24hr)</b>";
+        }
+        showSymbolDataCG();
+
+        async function showCandleCG(){
+            const candles = await getCandlesCG("bitcoin", "usd", "1");
+            
+            let html = "<table border='1'><tr><th>Timestamp</th><th>Open</th><th>High</th><th>Low</th><th>Close</th></tr>";
+            candles.forEach(c => {
+                const date = new Date(c[0]); // timestamp → tarih
+                html += `<tr>
+                            <td>${date.toLocaleString()}</td>
+                            <td>${c[1]}</td>
+                            <td>${c[2]}</td>
+                            <td>${c[3]}</td>
+                            <td>${c[4]}</td>
+                        </tr>`;
+            });
+            html += "</table>";
+
+            document.getElementById("candles").innerHTML = html;
+        }
+        showCandleCG();
+    </script>
+</body>
+</html>
