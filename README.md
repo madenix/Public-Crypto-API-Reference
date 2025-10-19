@@ -56,3 +56,5 @@ Public-Crypto-API-Reference/<br/>
 * Since most demos in this repository use **public API endpoints**, an **API key is usually not required**. For instance, endpoints used to retrieve current prices are generally public.
 * Some platforms might require an **API Key** even for some free-tier endpoints. If a demo doesn't work, check the `*.js` file to see if you need to insert your own key.
 * **Sensitive Data:** This project should **NEVER** contain **private API keys, secrets, or sensitive user information**. All API calls must target public data that can be safely displayed in the browser.
+
+  For more information visit www.madenix.com
