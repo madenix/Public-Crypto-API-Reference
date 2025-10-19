@@ -45,9 +45,6 @@ Public-Crypto-API-Reference/<br/>
 ├── binance/                <br/>
 │   ├── index.html          <br/>
 │   └── binance.js          <br/>
-├── coinmarketcap/          <br/>
-│   ├── index.html          <br/>
-│   └── coinmarketcap.js    <br/>
 
 ---
 
