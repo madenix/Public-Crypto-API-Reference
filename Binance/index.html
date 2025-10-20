@@ -4,10 +4,13 @@
   <meta charset="UTF-8">
   <title>Binance Price Helper</title>
   <script src="binance.js"></script>
+  <script src="tickerTape.js"></script>
 </head>
 <body>
-
   <h1>Crypto Prices:</h1>
+
+  <div id="tickerTape" style="padding: 5px; border-top: 1px solid; border-bottom: 1px solid;"></div>
+
   <div id="price">Loading...</div>
   <br/>
   <b>Last 3 Candle Datas For BTC</b>
@@ -15,8 +18,6 @@
   <br>
   <b>Last 24 Hour Data for BTC</b>
   <pre id="24hour">Loading...</pre>
-
-
   <script>
     async function showBinancePrice(){
       const price = await getPriceBinanceAsync("BTC", "USDT");
@@ -28,13 +29,18 @@
       const candles = await getCandleBinanceAsyn("BTC","USDT","1h","3");
       document.getElementById("candle").innerHTML = JSON.stringify(candles, null,2);
     }
+    
     showBinanceCandles();
 
     async function show24hr(){
       const priceData = await getBinance24hr("BTC", "USDT");
       document.getElementById("24hour").textContent = JSON.stringify(priceData, null, 2);
     }
+
     show24hr();
+
+    const tickerTapeSymbols = ["btc", "eth", "bnb", "shib"];
+    tickerTapeBinance(tickerTapeSymbols, "usdt", "tickerTape");
   </script>
 </body>
 </html>
