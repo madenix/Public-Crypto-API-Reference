@@ -9,8 +9,6 @@ This repository hosts simple **HTML/JavaScript** demos showcasing how to interac
 * **Diversity:** Includes integration examples for several major platforms:
     * **CoinGecko** (Data Provider)
     * **Binance** (Exchange)
-    * **CoinMarketCap** (Data Provider - *Note: Some popular public endpoints for CoinMarketCap may require a free API key.*)
-    * **OKX** (Exchange)
 * **Simplicity:** Each demo uses plain **HTML**, **CSS**, and **JavaScript**, requiring no complex setup or server dependencies.
 * **Quick Learning:** Clearly demonstrates how to make API calls and render the incoming data on a webpage.
 
