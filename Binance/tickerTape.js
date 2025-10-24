@@ -8,10 +8,13 @@ function injectTickerStyle(){
     }
 
     .tickerContent {
-      animation-duration: 15s ;
-			animation-iteration-count: infinite ;
-			animation-name: scroll ;
-			animation-timing-function: linear ;
+      display: flex;
+      align-items: center;      
+      justify-content: center;
+      animation-duration: 15s;
+      animation-iteration-count: infinite;
+      animation-name: scroll;
+      animation-timing-function: linear;
     }
 
     @keyframes scroll {
@@ -116,12 +119,14 @@ function tickerTapeBinance(symbols, quote, tickerElement) {
           const arrow = change >= 0 ? "▲" : "▼";
           const color = change >= 0 ? "green" : "red";
           change = Math.abs(change).toFixed(2);
-
-          return "<b><span style=''>" + s + "</span></b>" + 
+          const logo = "https://cdn.jsdelivr.net/gh/madenix/Crypto-logo-cdn@main/Logos/"+ s +".svg";
+          
+          return "&nbsp;&nbsp;<img height=25 width=25 src="+logo+">"+ 
+              "&nbsp;<b><span style=''>" + s + "</span></b>" + 
               ": $" + tickerData[s].tickerPrice + "&nbsp;&nbsp;" + 
               "<span style='color:"+color+"'>"+ arrow + change + "</span>";
       })
-      .join(" | ");
+      .join(" &nbsp;&nbsp;&nbsp;| ");
 
       display = display + "&nbsp;&nbsp;&nbsp;•&nbsp;&nbsp;&nbsp;";
 
