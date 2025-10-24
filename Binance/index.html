@@ -8,9 +8,12 @@
 </head>
 <body>
   <h1>Crypto Prices:</h1>
-
-  <div id="tickerTape" style="border-top: 1px solid; border-bottom: 1px solid; padding-top: 10px; padding-bottom: 10px;"></div>
-
+  <div id="tickerTape" style="
+    padding: 5px; 
+    border-top: 1px solid; 
+    border-bottom: 1px solid;"></div>
+  <br>
+  <b>Current Price For BTC</b><br>
   <div id="price">Loading...</div>
   <br/>
   <b>Last 3 Candle Datas For BTC</b>
@@ -21,7 +24,7 @@
   <script>
     async function showBinancePrice(){
       const price = await getPriceBinanceAsync("BTC", "USDT");
-      document.getElementById("price").innerHTML = "Current Price : " + price;
+      document.getElementById("price").innerHTML = "BTC : " + price;
     }
     showBinancePrice();
 
@@ -39,7 +42,7 @@
 
     show24hr();
 
-    const tickerTapeSymbols = ["btc", "eth", "bnb", "shib"];
+    const tickerTapeSymbols = ["btc", "eth", "bnb", "xrp"];
     tickerTapeBinance(tickerTapeSymbols, "usdt", "tickerTape");
   </script>
 </body>
