@@ -2,19 +2,20 @@ function injectTickerStyle(){
   var style = document.createElement('style');
   style.innerHTML = `
     #tickerTape {
-			display: flex ;
-			overflow: hidden ;
-			white-space: nowrap ;
+        height: 50px;
+        display:flex;
+        overflow: hidden;
+        white-space: nowrap;
     }
-
+    
     .tickerContent {
-      display: flex;
-      align-items: center;      
-      justify-content: center;
-      animation-duration: 15s;
-      animation-iteration-count: infinite;
-      animation-name: scroll;
-      animation-timing-function: linear;
+        display: flex;
+        align-items: center;      
+        animation-duration: 15s;
+        animation-iteration-count: infinite;
+        animation-name: scroll;
+        animation-timing-function: linear;
+        padding-right: 100px;
     }
 
     @keyframes scroll {
@@ -27,8 +28,8 @@ function injectTickerStyle(){
     }
 
     #tickerTape:hover .tickerContent {
-  animation-play-state: paused;
-}
+        animation-play-state: paused;
+    }
   `;
   document.head.appendChild(style);
 }
@@ -44,6 +45,7 @@ function tickerTapeBinance(symbols, quote, tickerElement) {
 
   var contentDiv3 = document.createElement("div");
   contentDiv3.className = "tickerContent";
+  
 
   document.getElementById(tickerElement).appendChild(contentDiv1);
   document.getElementById(tickerElement).appendChild(contentDiv2);
@@ -121,14 +123,14 @@ function tickerTapeBinance(symbols, quote, tickerElement) {
           change = Math.abs(change).toFixed(2);
           const logo = "https://cdn.jsdelivr.net/gh/madenix/Crypto-logo-cdn@main/Logos/"+ s +".svg";
           
-          return "&nbsp;&nbsp;<img height=25 width=25 src="+logo+">"+ 
+          return "<img height=25 width=25 src="+logo+">"+ 
               "&nbsp;<b><span style=''>" + s + "</span></b>" + 
-              ": $" + tickerData[s].tickerPrice + "&nbsp;&nbsp;" + 
-              "<span style='color:"+color+"'>"+ arrow + change + "</span>";
+              "&nbsp; $" + tickerData[s].tickerPrice + "&nbsp;&nbsp;" + 
+              "<span style='color:"+color+"'>"+ arrow + change + "%</span>";
       })
-      .join(" &nbsp;&nbsp;&nbsp;| ");
+      .join("&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;");
 
-      display = display + "&nbsp;&nbsp;&nbsp;•&nbsp;&nbsp;&nbsp;";
+    display = "<span style='font-size: 1.5em; padding-left: 20px; padding-right:5px;'>➤</span> " + display;
 
       contentDiv1.innerHTML = display;
       contentDiv2.innerHTML = display;
