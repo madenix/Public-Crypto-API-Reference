@@ -5,15 +5,15 @@
   <title>Binance Price Helper</title>
   <script src="binance.js"></script>
   <script src="tickerTapeWidget.js"></script>
-  <script src="tickerWidget.js"></script>
 </head>
 <body>
   <h1>Crypto Prices From Binance:</h1>
   <b>Ticker Tape</b><br>
+  <script src="tickerTape2.js" data-bases="btc,xrp,ltc,shib" data-quote="usdt"></script>
   <hr/><div id="tickerTape"></div><hr/>
   <br>
   <b>Live price for a symbol</b><br>
-  <div id="priceWidget" style="padding:10px; border:1px solid; border-radius:10px; display: inline-block";></div>
+  <script src="tickerWidget.js" data-base="btc" data-quote="usdt"></script>
   <br><br>
   <b>Current Price For BTC</b><br>
   <div id="price">Loading...</div>
@@ -44,8 +44,6 @@
 
     const tickerTapeSymbols = ["btc", "eth", "bnb", "xrp"];
     tickerTapeBinance(tickerTapeSymbols, "usdt", "tickerTape");
-    
-    tickerBinance("icp", "usdt", "priceWidget");
   </script>
 </body>
 </html>
