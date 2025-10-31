@@ -1,4 +1,12 @@
-function tickerBinance(base, quote, tickerElement) {
+//this is a IIFE 
+(function() {
+  // Get the current script tag that loaded this JS
+  const script = document.currentScript;
+
+  // Read custom data attributes from the script tag
+  const base = script.getAttribute("data-base");   // Base currency, e.g., "btc"
+  const quote = script.getAttribute("data-quote"); // Quote currency, e.g., "usdt"
+
   /*
       Binance WebSocket 24hr Ticker Stream Example
       --------------------------------------------
@@ -8,10 +16,10 @@ function tickerBinance(base, quote, tickerElement) {
       Sample data payload (for one symbol):
       {
         "e": "24hrTicker",  // Event type
-        "E": 1672515782136, // Event time
+        "E": 1672515782136, // Event timestamp
         "s": "BNBBTC",      // Symbol
         "p": "0.0015",      // Price change
-        "P": "250.00",      // Price change percent
+        "P": "250.00",      // Price change percentage
         "w": "0.0018",      // Weighted average price
         "x": "0.0009",      // First trade price in 24h window
         "c": "0.0025",      // Last price
@@ -32,64 +40,69 @@ function tickerBinance(base, quote, tickerElement) {
         "n": 18151          // Total number of trades
       }
   */
-  
-  // --- 1️⃣ Define the WebSocket endpoint for the given trading pair
+
+  // Construct the Binance WebSocket URL for the 24hr ticker
   const tickerUrl = "wss://stream.binance.com:9443/ws/" + base + quote + "@ticker";
+
+  // Open WebSocket connection
   const tickerSocket = new WebSocket(tickerUrl);
+
+  // Create a container div for the ticker
+  var tickerElement = document.createElement("div");
+  document.body.appendChild(tickerElement); // Append container to the page
+  tickerElement.style.display = "inline-block";
+  tickerElement.style.border = "1px solid #ccc";
+  tickerElement.style.borderRadius = "5px";
+  tickerElement.style.padding = "5px";
   
-  // --- 2️⃣ Create a container for the symbol logo and pair name
+  // Create a div for the logo and symbol
   var logoDiv = document.createElement("div");
-  
-  // Construct logo image URL dynamically (uses base symbol name)
-  const logo = "<img src='https://cdn.jsdelivr.net/gh/madenix/Crypto-logo-cdn@main/Logos/" 
-                + base.toUpperCase() + ".svg' width='64' />";
-  
-  // Format trading pair text (e.g., BTC/USDT)
+  const logo = "<img src='https://cdn.jsdelivr.net/gh/madenix/Crypto-logo-cdn@main/Logos/" + base.toUpperCase() + ".svg' width='64' />";
   const symbol = base.toUpperCase() + "/" + quote.toUpperCase();
-  
-  // Combine logo and symbol name into the same container
   logoDiv.innerHTML = logo + symbol;
 
-  // --- 3️⃣ Apply inline styling for layout and visual design
-  logoDiv.style.display = "flex";         // Use flex layout for horizontal alignment
-  logoDiv.style.alignItems = "center";    // Vertically center logo and text
-  logoDiv.style.gap = "16px";             // Space between logo and symbol text
+  // Style the logo + symbol container
+  logoDiv.style.display = "flex";         
+  logoDiv.style.alignItems = "center";    
+  logoDiv.style.gap = "16px";             
   logoDiv.style.fontSize = "1.2rem";
   logoDiv.style.fontWeight = "600";
   logoDiv.style.margin = "10px 0";
+  tickerElement.appendChild(logoDiv);
 
-  // Append logo section to the main ticker container
-  document.getElementById(tickerElement).appendChild(logoDiv);
-
-  // --- 4️⃣ Create and style the price display element
+  // Create a div for the live price
   var priceDiv = document.createElement("div");
-  document.getElementById(tickerElement).appendChild(priceDiv);
+  tickerElement.appendChild(priceDiv);
   priceDiv.style.fontSize = "1.5rem";
   priceDiv.style.fontWeight = "1000";
 
-  // --- 5️⃣ Create the daily change percentage element
+  // Create a div for the daily percent change
   var dailyChangeDiv = document.createElement("div");
-  document.getElementById(tickerElement).appendChild(dailyChangeDiv);
+  tickerElement.appendChild(dailyChangeDiv);
 
-  // --- 6️⃣ Handle incoming WebSocket messages
+  // Listen for incoming WebSocket messages
   tickerSocket.onmessage = (event) => {
-    console.log(event.data);
-    // Parse received JSON payload
+    // Parse the JSON data from Binance
     const data = JSON.parse(event.data);
     
-    // Extract and format last traded price
+    // Update the last price
     let price = parseFloat(data.c);
-    price = price > 1 ? price.toFixed(2) : price;  // Format decimals for readability
+    price = price > 1 ? price.toFixed(2) : price; 
     priceDiv.innerHTML = "$" + price;
     
-    // Extract daily percent change
+    // Update the daily percent change
     let change = parseFloat(data.P);
-    const arrow = change >= 0 ? "▲" : "▼";         // Directional arrow
-    const color = change >= 0 ? "green" : "red";   // Green for gain, red for loss
-    change = Math.abs(change).toFixed(2);          // Remove negative sign, format
+    const arrow = change >= 0 ? "▲" : "▼";     // Up or down arrow
+    const color = change >= 0 ? "green" : "red";  
+    change = Math.abs(change).toFixed(2);     
     
-    // Update color and text for the daily change display
     dailyChangeDiv.style.color = color;
     dailyChangeDiv.innerHTML = arrow + change;
   };
-}
+
+  // Optional: handle WebSocket errors
+  tickerSocket.onerror = (err) => {
+    console.error("WebSocket error:", err);
+  };
+
+})();
