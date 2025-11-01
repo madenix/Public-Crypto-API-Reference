@@ -103,7 +103,8 @@ function tickerTapeStyle(){
   // Create the main container for the ticker tape
   const mainDiv = document.createElement("div");
   mainDiv.id = "tickerTapeMain";
-  document.body.appendChild(mainDiv);
+  //document.body.appendChild(mainDiv);
+  (script.parentNode || document.body).insertBefore(mainDiv, script);
 
   // Create the inner content container
   const contentDiv1 = document.createElement("div");
