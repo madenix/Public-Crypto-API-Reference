@@ -176,7 +176,7 @@ function tickerTapeStyle(){
 				symbolDiv.style.display = "flex";
 				symbolDiv.style.alignItems = "center";
 				symbolDiv.style.padding = "5px";
-				symbolDiv.style.marginLeft = "10px";
+				symbolDiv.style.marginLeft = "30px";
 
 				symbolDiv.appendChild(logo);
 				symbolDiv.appendChild(nameSpan);
