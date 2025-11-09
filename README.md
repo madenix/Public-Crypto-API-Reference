@@ -1,4 +1,4 @@
-# 📈 Maden Crypto Widgets
+# 📈 Crypto Api Widgets
 
 This repository hosts simple **HTML/JavaScript** demos showcasing how to interact with the public APIs of popular cryptocurrency exchanges and data providers. This project is intended to serve as a quick starting point for developers looking to access crypto market data.
 
